@@ -1,36 +1,77 @@
-.home-container {
+.hero {
   text-align: center;
   margin-top: 120px;
+  padding: 6rem 2rem;
+  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  color: white;
 }
 
-.home-title {
-  font-size: 42px;
-  margin-bottom: 15px;
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
 }
 
-.home-subtitle {
-  font-size: 18px;
-  margin-bottom: 40px;
-  color: #555;
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
 }
 
-.home-buttons {
+.hero-buttons button {
+  padding: 0.8rem 1.8rem;
+  margin: 0.5rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: white;
+  color: #2563eb;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.hero-buttons button:hover {
+  background-color: #0f172a;
+  color: white;
+  transform: translateY(-3px);
+}
+
+.features {
+  padding: 4rem 2rem;
+  text-align: center;
+  background-color: #f8fafc;
+}
+
+.features h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  color: #0f172a;
+}
+
+.feature-cards {
   display: flex;
   justify-content: center;
-  gap: 20px;
+  gap: 2rem;
+  flex-wrap: wrap;
 }
 
-.home-button {
-  padding: 12px 25px;
-  font-size: 16px;
-  cursor: pointer;
-  border: none;
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-  transition: 0.3s;
+.card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 280px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
 }
 
-.home-button:hover {
-  background-color: #0056b3;
+.card:hover {
+  transform: translateY(-5px);
+  border: 2px solid #2563eb;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.footer {
+  background-color: #0f172a;
+  color: #cbd5e1;
+  text-align: center;
+  padding: 2rem;
 }
