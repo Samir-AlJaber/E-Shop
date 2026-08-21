@@ -699,4 +699,4 @@ const updateStock = async () => {
   );
 }
 
-export default ProductsPage;
+export default ProductsPage; 
