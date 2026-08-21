@@ -1,90 +1,204 @@
-.register-wrapper {
-  min-height: 90vh;
+.register-container {
   display: flex;
-  justify-content: center;
+  min-height: 85vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.register-left {
+  flex: 0 0 54%;
+  position: relative;
+  display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #2563eb, #38bdf8);
+  justify-content: center;
+  color: white;
+  overflow: hidden;
+  margin-right: -70px;
+  padding-right: 70px;
+  border-top-right-radius: 90px 120px;
+  border-bottom-right-radius: 180px 300px;
+  z-index: 2;
+}
+
+.register-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  animation: heroZoom 1.9s ease-in-out infinite alternate;
+  z-index: 0;
+}
+
+.register-left-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+      rgba(2, 6, 23, 0.82),
+      rgba(30, 64, 175, 0.58),
+      rgba(56, 189, 248, 0.38));
+  z-index: 1;
+}
+
+.register-left-content {
+  position: relative;
+  z-index: 2;
+  max-width: 520px;
+  text-align: center;
+  padding: 2rem 2.5rem;
+}
+
+.register-left-content h1 {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  color: white;
+  text-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+}
+
+.register-left-content p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+.register-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: linear-gradient(135deg,
+      #f8fbff 0%,
+      #eef4fb 45%,
+      #dde8f7 100%);
 }
 
 .register-card {
-  background: rgba(255, 255, 255, 0.95);
+  width: 390px;
   padding: 3rem;
-  border-radius: 15px;
-  width: 380px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-radius: 26px;
   text-align: center;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.18);
 }
 
 .register-card h2 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
   color: #0f172a;
+  font-size: 2rem;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.95rem;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  border-radius: 14px;
+  font-size: 0.96rem;
+  margin-bottom: 12px;
 }
 
-.form-group input {
-  padding: 0.8rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  transition: 0.3s;
-}
-
-.form-group input:focus {
+.form-group input:focus,
+.form-group select:focus {
   border-color: #2563eb;
   outline: none;
-  box-shadow: 0 0 5px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
 }
 
 .register-card button {
   width: 100%;
-  padding: 0.9rem;
-  background-color: #2563eb;
-  color: white;
+  padding: 0.95rem;
+  border-radius: 999px;
   border: none;
-  border-radius: 8px;
   font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: 0.3s;
+  color: white;
+  background: linear-gradient(120deg,
+      #2563eb,
+      #38bdf8,
+      #6366f1,
+      #38bdf8);
+  background-size: 300% 300%;
   margin-top: 10px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .register-card button:hover {
-  background-color: #0f172a;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37, 99, 235, 0.35);
+  animation: buttonFlow 3s linear infinite;
 }
 
-.field-error {
-  color: #dc2626;
-  font-size: 0.8rem;
-  margin-top: 5px;
-  text-align: left;
+.register-login-link {
+  margin-top: 1.5rem;
+  font-size: 0.95rem;
+  color: #475569;
+}
+
+.register-login-link span {
+  color: #2563eb;
+  font-weight: 700;
+  cursor: pointer;
+  margin-left: 6px;
+}
+
+.register-login-link span:hover {
+  text-decoration: underline;
 }
 
 .success-msg {
-  background-color: #d1fae5;
+  background: rgba(16, 185, 129, 0.15);
   color: #065f46;
-  padding: 0.7rem;
-  border-radius: 8px;
+  padding: 0.75rem;
+  border-radius: 10px;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
 }
 
 .error-msg {
-  background-color: #fee2e2;
-  color: #991b1b;
-  padding: 0.7rem;
-  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #7f1d1d;
+  padding: 0.75rem;
+  border-radius: 10px;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
 }
 
-.footer {
-  background-color: #0f172a;
-  color: #cbd5e1;
-  text-align: center;
-  padding: 2rem;
+@keyframes buttonFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes heroZoom {
+  from {
+    transform: scale(0.9);
+  }
+
+  to {
+    transform: scale(1.06);
+  }
+}
+
+@media (max-width: 900px) {
+  .register-container {
+    flex-direction: column;
+  }
+
+  .register-left {
+    min-height: 320px;
+    margin-right: 0;
+    padding-right: 0;
+    border-radius: 0;
+  }
+
+  .register-card {
+    width: 100%;
+    max-width: 400px;
+  }
 }
