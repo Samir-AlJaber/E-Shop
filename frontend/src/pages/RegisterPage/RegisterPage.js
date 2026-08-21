@@ -1,8 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Navbar/Navbar";
+import Footer from "../../components/Footer/Footer";
 import "./RegisterPage.css";
+import heroImage from "../../assets/images/login-bg.jpg";
 
 function RegisterPage() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -10,141 +15,138 @@ function RegisterPage() {
     role: "customer"
   });
 
-  const [errors, setErrors] = useState({});
-  const [serverMessage, setServerMessage] = useState("");
+  const [message, setMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const validate = () => {
-    let newErrors = {};
-
-    if (!formData.email.endsWith("@gmail.com")) {
-      newErrors.email = "Email must end with @gmail.com";
-    }
-
-    if (formData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters";
-    } else if (!/[A-Z]/.test(formData.password)) {
-      newErrors.password = "Must contain at least 1 uppercase letter";
-    } else if (!/[a-z]/.test(formData.password)) {
-      newErrors.password = "Must contain at least 1 lowercase letter";
-    } else if (!/[0-9]/.test(formData.password)) {
-      newErrors.password = "Must contain at least 1 number";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-
-    setErrors({
-      ...errors,
-      [e.target.name]: ""
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setServerMessage("");
 
-    if (!validate()) return;
-
-    try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/auth_register.php`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData)
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-        setServerMessage("Registration successful 🎉");
-        setIsSuccess(true);
-        setErrors({});
-      } else {
-        if (data.errors) {
-          setErrors(data.errors);
-        }
-        setServerMessage(data.message || "Registration failed");
-        setIsSuccess(false);
+    const response = await fetch(
+      `${process.env.REACT_APP_API_URL}/auth_register.php`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData)
       }
+    );
 
-    } catch (error) {
-      setServerMessage("Something went wrong.");
+    const data = await response.json();
+
+    if (data.success) {
+      setMessage("Registration successful");
+      setIsSuccess(true);
+
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 1000);
+
+    } else {
+      setMessage(data.message || "Registration failed");
       setIsSuccess(false);
     }
   };
 
   return (
-    <>
+    <div className="app-wrapper">
       <Navbar />
 
-      <div className="register-wrapper">
-        <div className="register-card">
-          <h2>Create Account</h2>
+      <div className="content-wrapper">
 
-          {serverMessage && (
-            <div className={isSuccess ? "success-msg" : "error-msg"}>
-              {serverMessage}
-            </div>
-          )}
+        <div className="register-container">
 
-          <form onSubmit={handleSubmit}>
+          <div className="register-left">
 
-            <div className="form-group">
-              <input
-                type="text"
-                name="name"
-                placeholder="Full Name"
-                onChange={handleChange}
-                required
-              />
+            <img src={heroImage} alt="" className="register-image" />
+
+            <div className="register-left-overlay"></div>
+
+            <div className="register-left-content">
+              <h1>Start Your E-Shop Journey</h1>
+              <p>
+                Create your account to manage products, orders,
+                customers and deliveries from one powerful dashboard.
+              </p>
             </div>
 
-            <div className="form-group">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                onChange={handleChange}
-                required
-              />
-              {errors.email && (
-                <span className="field-error">{errors.email}</span>
+          </div>
+
+          <div className="register-right">
+
+            <div className="register-card">
+
+              <h2>Create Account</h2>
+
+              {message && (
+                <div className={isSuccess ? "success-msg" : "error-msg"}>
+                  {message}
+                </div>
               )}
+
+              <form onSubmit={handleSubmit}>
+
+                <div className="form-group">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Full Name"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <select name="role" onChange={handleChange}>
+                    <option value="customer">Customer</option>
+                    <option value="salesman">Salesman</option>
+                    <option value="owner">Owner</option>
+                  </select>
+                </div>
+
+                <button type="submit">Register</button>
+
+              </form>
+
+              <div className="register-login-link">
+                Already have an account?
+                <span onClick={() => navigate("/login")}>
+                  Login
+                </span>
+              </div>
+
             </div>
 
-            <div className="form-group">
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                onChange={handleChange}
-                required
-              />
-              {errors.password && (
-                <span className="field-error">{errors.password}</span>
-              )}
-            </div>
+          </div>
 
-            <button type="submit">Register</button>
-
-          </form>
         </div>
+
       </div>
 
-      <footer className="footer">
-        <p>© 2026 E-Shop Management System. All Rights Reserved.</p>
-      </footer>
-    </>
+      <Footer />
+    </div>
   );
 }
 
