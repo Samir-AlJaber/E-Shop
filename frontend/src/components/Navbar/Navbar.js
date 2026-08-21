@@ -15,12 +15,11 @@ function Navbar() {
   }, []);
 
   const handleLogoutConfirm = () => {
-      localStorage.removeItem("user");
-      setUser(null);
-      setShowConfirm(false);
-      navigate("/");
+    localStorage.removeItem("user");
+    setUser(null);
+    setShowConfirm(false);
+    navigate("/");
   };
-
 
   return (
     <>
@@ -29,6 +28,23 @@ function Navbar() {
 
         <div className="nav-links">
           <Link to="/">Home</Link>
+          <Link to="/products">Products</Link>
+
+          {user?.role === "owner" && (
+            <Link to="/categories">Categories</Link>
+          )}
+
+          {user && user.role === "customer" && (
+            <Link to="/order-history">My Orders</Link>
+          )}
+
+          {user?.role === "owner" && (
+            <Link to="/owner-orders">Orders</Link>
+          )}
+
+          {user && user.role === "salesman" && (
+            <Link to="/salesman-orders">My Deliveries</Link>
+          )}
 
           {user ? (
             <>
