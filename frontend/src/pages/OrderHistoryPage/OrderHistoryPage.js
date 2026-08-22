@@ -5,7 +5,9 @@ import Footer from "../../components/Footer/Footer";
 import "./OrderHistoryPage.css";
 
 function OrderHistoryPage() {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const user = useMemo(() => {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  }, []);
 
   const [orders, setOrders] = useState([]);
 

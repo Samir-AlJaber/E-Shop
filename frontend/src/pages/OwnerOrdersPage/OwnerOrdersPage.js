@@ -1,11 +1,13 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useMemo } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import { Navigate, useNavigate } from "react-router-dom";
 import "./OwnerOrdersPage.css";
 
 function OwnerOrdersPage() {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const user = useMemo(() => {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  }, []);
   const navigate = useNavigate();
 
   const [orders, setOrders] = useState([]);

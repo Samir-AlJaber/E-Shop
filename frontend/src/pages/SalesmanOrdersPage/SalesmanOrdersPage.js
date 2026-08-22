@@ -5,7 +5,10 @@ import { Navigate } from "react-router-dom";
 import "./SalesmanOrdersPage.css";
 
 function SalesmanOrdersPage() {
-  const user = JSON.parse(localStorage.getItem("user") || "null");
+  const user = useMemo(() => {
+    return JSON.parse(localStorage.getItem("user") || "null");
+  }, []);
+  
 
   const [orders, setOrders] = useState([]);
 
