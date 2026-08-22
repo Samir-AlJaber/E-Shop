@@ -150,8 +150,8 @@
   animation: deleteFlow 2s linear infinite;
 }
 
-.success-msg,
-.error-msg {
+.category-container .success-msg,
+.category-container .error-msg {
   padding: .9rem 1.2rem;
   border-radius: 12px;
   margin-bottom: 1rem;

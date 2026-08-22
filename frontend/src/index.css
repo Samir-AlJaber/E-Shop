@@ -44,6 +44,13 @@ input:focus, select:focus {
   transform: scale(1.02);
 }
 
+.success-msg,
+.error-msg {
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
 @keyframes pageFade {
   from {
     opacity: 0;

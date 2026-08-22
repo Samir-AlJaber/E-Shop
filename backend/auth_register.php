@@ -44,7 +44,12 @@ elseif (!preg_match('/[0-9]/', $password)) {
 }
 
 if (!empty($errors)) {
-    echo json_encode(["success" => false, "errors" => $errors]);
+
+    echo json_encode([
+        "success" => false,
+        "message" => array_values($errors)[0]
+    ]);
+
     exit;
 }
 
@@ -64,7 +69,7 @@ if ($checkStmt === false) {
 if (sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC)) {
     echo json_encode([
         "success" => false,
-        "errors" => ["email" => "Email already registered"]
+        "message" => "Email already registered"
     ]);
     exit;
 }
