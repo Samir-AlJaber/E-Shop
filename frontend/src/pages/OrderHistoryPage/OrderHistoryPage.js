@@ -5,9 +5,7 @@ import Footer from "../../components/Footer/Footer";
 import "./OrderHistoryPage.css";
 
 function OrderHistoryPage() {
-  const user = useMemo(() => {
-    return JSON.parse(localStorage.getItem("user") || "null");
-  }, []);
+  const user = JSON.parse(localStorage.getItem("user") || "null");
 
   const [orders, setOrders] = useState([]);
 
@@ -26,6 +24,8 @@ function OrderHistoryPage() {
   const [sortType, setSortType] = useState("");
   const [ratingOrder, setRatingOrder] = useState(null);
   const [ratingValue, setRatingValue] = useState(5);
+  const [feedback, setFeedback] = useState("");
+  const [feedbackError, setFeedbackError] = useState("");
 
   useEffect(() => {
     if (user && user.role === "customer") {
@@ -247,6 +247,13 @@ function OrderHistoryPage() {
 
   if (!ratingOrder) return;
 
+  if (feedback.length > 500) {
+    setFeedbackError("Feedback cannot exceed 500 characters.");
+    return;
+  }
+
+  setFeedbackError("");
+
   const response = await fetch(
     `${process.env.REACT_APP_API_URL}/submit_rating.php`,
     {
@@ -255,7 +262,8 @@ function OrderHistoryPage() {
       body: JSON.stringify({
         order_id: ratingOrder.order_id,
         customer_id: user.reference_id,
-        rating: ratingValue
+        rating: ratingValue,
+        feedback: feedback
       })
     }
   );
@@ -264,6 +272,8 @@ function OrderHistoryPage() {
 
       if (data.success) {
         setRatingOrder(null);
+        setFeedback("");
+        setFeedbackError("");
 
         fetch(`${process.env.REACT_APP_API_URL}/get_customer_orders.php`, {
           method: "POST",
@@ -459,9 +469,11 @@ function OrderHistoryPage() {
                     </span>
                   </div>
 
-                  <p><strong>Product:</strong> {order.product_name}</p>
-                  <p><strong>Quantity:</strong> {order.quantity}</p>
-                  <p><strong>Total:</strong> BDT {order.total_amount}</p>
+                  <div className="product-info-box">
+                    <p><strong>Product:</strong> {order.product_name}</p>
+                    <p><strong>Quantity:</strong> {order.quantity}</p>
+                    <p><strong>Total:</strong> BDT {order.total_amount}</p>
+                  </div>
 
                   <div className="delivery-box">
                     <p><strong>Delivery Address:</strong> {order.delivery_address}</p>
@@ -472,12 +484,47 @@ function OrderHistoryPage() {
                     <p><strong>Payment:</strong> {order.payment_method}</p>
                     
                   </div>
+                  
+                    <div className="owner-box">
+
+                      <p>
+                        <strong>Product Owner:</strong>{" "}
+                        {order.owner_name}
+                      </p>
+
+                      <p>
+                        <strong>Owner Email:</strong>{" "}
+                        {order.owner_email}
+                    </p>
+
+                    </div>
+
+
+                    {(order.delivery_man_name || order.delivery_man_email) && (
+                      <div className="delivery-man-box">
+
+                        <p>
+                          <strong>Delivery Man:</strong>{" "}
+                          {order.delivery_man_name}
+                        </p>
+
+                        <p>
+                          <strong>Delivery Email:</strong>{" "}
+                          {order.delivery_man_email}
+                        </p>
+
+                      </div>
+                    )}
 
                     {order.status === "delivered" && !order.delivery_rating && (
                       <div className="rating-btn-wrapper">
                         <button
                           className="rate-delivery-btn"
-                          onClick={() => setRatingOrder(order)}
+                          onClick={() => {
+                            setRatingOrder(order);
+                            setFeedback("");
+                            setFeedbackError("");
+                          }}
                         >
                           Rate Delivery
                         </button>
@@ -485,7 +532,20 @@ function OrderHistoryPage() {
                     )}
 
                     {order.delivery_rating && (
-                       <p><strong>Your Rating:</strong> ⭐ {order.delivery_rating}</p>
+                      <div className="rating-display-box">
+
+                        <p>
+                          <strong>Your Rating:</strong> ⭐ {order.delivery_rating}
+                        </p>
+
+                        <p>
+                          <strong>Your Feedback:</strong>{" "}
+                          {order.delivery_feedback && order.delivery_feedback.trim() !== ""
+                            ? order.delivery_feedback
+                            : "No feedback given"}
+                        </p>
+
+                      </div>
                     )}
 
                 </div>
@@ -502,19 +562,50 @@ function OrderHistoryPage() {
 
           <p>Order #{ratingOrder.order_id}</p>
 
-          <select
-            value={ratingValue}
-            onChange={(e) => setRatingValue(e.target.value)}
-          >
-            <option value="5">5 ⭐ Excellent</option>
-            <option value="4">4 ⭐ Good</option>
-            <option value="3">3 ⭐ Average</option>
-            <option value="2">2 ⭐ Poor</option>
-            <option value="1">1 ⭐ Bad</option>
-          </select>
+            <select
+              value={ratingValue}
+              onChange={(e) => setRatingValue(Number(e.target.value))}
+            >
+              <option value="5">5 ⭐ Excellent</option>
+              <option value="4">4 ⭐ Good</option>
+              <option value="3">3 ⭐ Average</option>
+              <option value="2">2 ⭐ Poor</option>
+              <option value="1">1 ⭐ Bad</option>
+            </select>
+
+            <textarea
+              placeholder="Write your feedback (optional)"
+              value={feedback}
+              maxLength={500}
+              onChange={(e) => {
+                setFeedback(e.target.value);
+
+                if (e.target.value.length <= 500) {
+                  setFeedbackError("");
+                }
+              }}
+            />
+
+            <p className="feedback-count">
+              {feedback.length}/500 characters
+            </p>
+
+            {feedbackError && (
+              <p className="feedback-error">
+                {feedbackError}
+              </p>
+            )}
 
           <div className="confirm-actions">
-            <button onClick={() => setRatingOrder(null)}>Cancel</button>
+            <button
+              onClick={() => {
+                setRatingOrder(null);
+                setFeedback("");
+                setFeedbackError("");
+              }}
+            >
+              Cancel
+            </button>
             <button onClick={submitRating}>Submit</button>
           </div>
         </div>

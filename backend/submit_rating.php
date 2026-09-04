@@ -15,6 +15,15 @@ $data = json_decode(file_get_contents("php://input"), true);
 $order_id = intval($data["order_id"] ?? 0);
 $rating = intval($data["rating"] ?? 0);
 $customer_id = intval($data["customer_id"] ?? 0);
+$feedback = trim($data["feedback"] ?? "");
+
+if (strlen($feedback) > 500) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Feedback is too long"
+    ]);
+    exit;
+}
 
 if ($order_id <= 0 || $rating < 1 || $rating > 5 || $customer_id <= 0) {
     echo json_encode(["success" => false]);
@@ -54,11 +63,17 @@ if ($existing_stmt && sqlsrv_has_rows($existing_stmt)) {
 }
 
 $insert = "
-INSERT INTO delivery_rating (order_id, salesman_id, customer_id, rating)
-VALUES (?, ?, ?, ?)
+INSERT INTO delivery_rating (order_id, salesman_id, customer_id, rating, feedback)
+VALUES (?, ?, ?, ?, ?)
 ";
 
-sqlsrv_query($conn, $insert, [$order_id, $salesman_id, $customer_id, $rating]);
+sqlsrv_query($conn, $insert, [
+    $order_id,
+    $salesman_id,
+    $customer_id,
+    $rating,
+    $feedback !== "" ? $feedback : null
+]);
 
 $update = "
 UPDATE salesman

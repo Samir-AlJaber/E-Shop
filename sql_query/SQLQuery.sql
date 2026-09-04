@@ -47,7 +47,6 @@ CREATE TABLE customer (
 CREATE TABLE category (
     category_id INT IDENTITY(1,1) PRIMARY KEY,
     category_name VARCHAR(100) NOT NULL UNIQUE
-    is_deleted BIT DEFAULT 0;
 );
 
 CREATE TABLE product (
@@ -137,6 +136,7 @@ CREATE TABLE delivery_rating (
     salesman_id INT NOT NULL,
     customer_id INT NOT NULL,
     rating INT NOT NULL CHECK (rating BETWEEN 1 AND 5),
+	feedback VARCHAR(500) NULL,
     created_at DATETIME DEFAULT GETDATE(),
 
     CONSTRAINT FK_rating_order

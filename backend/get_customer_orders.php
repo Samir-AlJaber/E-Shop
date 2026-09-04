@@ -34,11 +34,23 @@ SELECT
     oi.quantity,
     oi.price,
     p.name AS product_name,
-    dr.rating AS delivery_rating
+    ow.username AS owner_name,
+    ow.email AS owner_email,
+    s.name AS delivery_man_name,
+    s.email AS delivery_man_email,
+    dr.rating AS delivery_rating,
+    dr.feedback AS delivery_feedback
 FROM orders o
-JOIN order_item oi ON o.order_id = oi.order_id
-JOIN product p ON oi.product_id = p.product_id
-LEFT JOIN delivery_rating dr ON o.order_id = dr.order_id
+JOIN order_item oi 
+ON o.order_id = oi.order_id
+JOIN product p 
+ON oi.product_id = p.product_id
+JOIN owner ow
+ON o.owner_id = ow.owner_id
+LEFT JOIN salesman s
+ON o.salesman_id = s.salesman_id
+LEFT JOIN delivery_rating dr 
+ON o.order_id = dr.order_id
 WHERE o.customer_id = ?
 ORDER BY o.order_date DESC
 ";
@@ -46,7 +58,11 @@ ORDER BY o.order_date DESC
 $stmt = sqlsrv_query($conn, $sql, [$customer_id]);
 
 if ($stmt === false) {
-    echo json_encode(["success" => false]);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Database query failed"
+    ]);
     exit;
 }
 

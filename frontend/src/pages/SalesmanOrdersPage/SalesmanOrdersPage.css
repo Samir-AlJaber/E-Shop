@@ -316,6 +316,48 @@
     transform: scale(1.05);
 }
 
+.product-info-box {
+  margin-top: 12px;
+  padding: 14px;
+  background: linear-gradient(135deg, #f8f1d4, #fde275);
+  border-radius: 12px;
+}
+
+.delivery-box {
+  background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 12px;
+}
+
+.customer-box {
+  margin-top: 12px;
+  padding: 14px;
+  background: linear-gradient(135deg, #dcfce7, #d1fae5);
+  border-radius: 12px;
+
+}
+
+.owner-box {
+  margin-top: 12px;
+  padding: 14px;
+  background: linear-gradient(135deg, #dcfce7, #d1fae5);
+  border-radius: 12px;
+}
+
+.rating-display-box {
+  margin-top: 15px;
+  padding: 12px;
+  background: #fef3c7;
+  border-radius: 10px;
+  border-left: 5px solid #f59e0b;
+
+}
+
+.rating-display-box p {
+  margin: 5px 0;
+}
+
 @media (max-width: 700px) {
     .order-grid {
         grid-template-columns: 1fr;

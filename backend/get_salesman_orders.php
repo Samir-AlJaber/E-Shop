@@ -15,7 +15,9 @@ $data = json_decode(file_get_contents("php://input"), true);
 $salesman_id = intval($data["salesman_id"] ?? 0);
 
 if ($salesman_id <= 0) {
-    echo json_encode(["success" => false]);
+    echo json_encode([
+        "success" => false
+    ]);
     exit;
 }
 
@@ -24,6 +26,7 @@ SELECT
     o.order_id,
     o.customer_id,
     o.salesman_id,
+    o.owner_id,
     o.total_amount,
     o.status,
     o.delivery_address,
@@ -31,9 +34,25 @@ SELECT
     o.postal_code,
     o.payment_method,
     c.name AS customer_name,
-    c.email AS customer_email
+    c.email AS customer_email,
+    ow.username AS owner_name,
+    ow.email AS owner_email,
+    p.name AS product_name,
+    oi.quantity AS product_quantity,
+    oi.price AS product_price,
+    dr.rating AS delivery_rating,
+    dr.feedback AS delivery_feedback
 FROM orders o
-JOIN customer c ON o.customer_id = c.customer_id
+JOIN customer c 
+ON o.customer_id = c.customer_id
+JOIN owner ow
+ON o.owner_id = ow.owner_id
+LEFT JOIN order_item oi
+ON o.order_id = oi.order_id
+LEFT JOIN product p
+ON oi.product_id = p.product_id
+LEFT JOIN delivery_rating dr 
+ON o.order_id = dr.order_id
 WHERE (o.salesman_id = ? OR o.status = 'delivery_rejected')
 ORDER BY o.order_id DESC
 ";
@@ -41,19 +60,29 @@ ORDER BY o.order_id DESC
 $stmt = sqlsrv_query($conn, $sql, [$salesman_id]);
 
 if ($stmt === false) {
-    echo json_encode(["success" => false]);
+    echo json_encode([
+        "success" => false
+    ]);
     exit;
 }
 
 $orders = [];
 
 while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+    if ($row["delivery_rating"] !== null) {
+        $row["delivery_rating"] = intval($row["delivery_rating"]);
+    }
     $orders[] = $row;
 }
 
 $rating = 0;
+$rating_sql = "
+SELECT rating 
+FROM salesman 
+WHERE salesman_id = ?
+";
 
-$rating_sql = "SELECT rating FROM salesman WHERE salesman_id = ?";
+
 $rating_stmt = sqlsrv_query($conn, $rating_sql, [$salesman_id]);
 
 if ($rating_stmt !== false) {
@@ -68,7 +97,8 @@ $total_deliveries = 0;
 $delivery_sql = "
 SELECT COUNT(*) AS total_deliveries
 FROM orders
-WHERE salesman_id = ? AND status = 'delivered'
+WHERE salesman_id = ? 
+AND status = 'delivered'
 ";
 
 $delivery_stmt = sqlsrv_query($conn, $delivery_sql, [$salesman_id]);

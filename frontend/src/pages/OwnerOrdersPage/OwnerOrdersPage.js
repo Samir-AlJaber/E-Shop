@@ -489,9 +489,17 @@ function OwnerOrdersPage() {
                     </span>
                   </div>
 
-                  <p><strong>Customer:</strong> {order.customer_name}</p>
-                  <p><strong>Email:</strong> {order.customer_email}</p>
-                  <p><strong>Total:</strong> BDT {order.total_amount}</p>
+                  <div className="product-info-box">
+                    <p>
+                      <strong>Product:</strong> {order.product_name}
+                    </p>
+                    <p>
+                      <strong>Quantity:</strong> {order.quantity}
+                    </p>
+                    <p>
+                      <strong>Total:</strong> BDT {order.total_amount}
+                    </p>
+                  </div>         
 
                   <div className="delivery-box">
                     <p><strong>Address:</strong> {order.delivery_address}</p>
@@ -503,6 +511,61 @@ function OwnerOrdersPage() {
 
                     <p><strong>Payment:</strong> {order.payment_method}</p>
                   </div>
+
+                  <div className="customer-box">
+                    <p>
+                      <strong>Customer:</strong> {order.customer_name}
+                    </p>
+                    <p>
+                      <strong>Email:</strong> {order.customer_email}
+                    </p>
+                  </div>
+
+                  {(order.delivery_man_name || order.delivery_man_email) && (
+                    <div className="salesman-box">
+
+                      <p>
+                        <strong>Salesman:</strong>{" "}
+                        {order.delivery_man_name || "Not Assigned"}
+                      </p>
+                      <p>
+                        <strong>Email:</strong>{" "}
+                        {order.delivery_man_email || "N/A"}
+                      </p>
+                    </div>
+                  )}
+
+                  {order.status === "delivered" && (
+                    <div className="rating-display-box">
+
+                      {order.delivery_rating !== null &&
+                      order.delivery_rating !== undefined ? (
+                        <>
+                          <p>
+                            <strong>Customer Rating:</strong> ⭐ {order.delivery_rating}/5
+                          </p>
+
+                          <p>
+                            <strong>Customer Feedback:</strong>{" "}
+                            {order.delivery_feedback && order.delivery_feedback.trim() !== ""
+                              ? order.delivery_feedback
+                              : "No feedback given"}
+                          </p>
+                        </>
+                      ) : (
+                        <>
+                          <p>
+                            <strong>Customer Rating:</strong> Not rated yet ⭐
+                          </p>
+
+                          <p>
+                            <strong>Customer Feedback:</strong> Waiting for customer feedback
+                          </p>
+                        </>
+                      )}
+
+                    </div>
+                  )}
 
                   {order.status === "pending" && (
                     <div className="action-buttons">

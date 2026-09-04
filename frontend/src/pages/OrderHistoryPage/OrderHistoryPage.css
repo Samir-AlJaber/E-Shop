@@ -201,8 +201,8 @@
   width: 100%;
   max-width: 1100px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+  gap: 28px;
   position: relative;
   z-index: 2;
 }
@@ -210,8 +210,8 @@
 .order-card {
   background: #ffffff;
   width: 100%;
-  padding: 2rem;
-  border-radius: 14px;
+  padding: 26px;
+  border-radius: 18px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
   box-sizing: border-box;
   transition: all 0.3s ease;
@@ -228,8 +228,8 @@
 .order-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 1rem;
-  font-weight: 700;
+  margin-bottom: 14px;
+  font-weight: 800;
   gap: 10px;
   flex-wrap: wrap;
   color: #0f172a;
@@ -274,10 +274,10 @@
 }
 
 .delivery-box {
-  margin-top: 1rem;
-  padding: 1rem;
   background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
-  border-radius: 10px;
+  padding: 14px;
+  border-radius: 12px;
+  margin-top: 12px;
 }
 
 .order-card p {
@@ -357,6 +357,82 @@
   margin-bottom: 12px;
   font-weight: 600;
   color: #475569;
+}
+
+.confirm-box textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  resize: vertical;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+  box-sizing: border-box;
+  font-family: inherit;
+
+}
+
+
+.confirm-box textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 6px rgba(37,99,235,0.4);
+
+}
+
+.confirm-box textarea::placeholder {
+  color: #64748b;
+}
+
+.feedback-count {
+    font-size: 0.85rem;
+    color: #64748b;
+    text-align: right;
+    margin-top: -5px;
+}
+
+.feedback-error {
+    font-size: 0.85rem;
+    color: #dc2626;
+    font-weight: 700;
+    margin-top: 5px;
+}
+
+.rating-display-box {
+  margin-top: 15px;
+  padding: 12px;
+  background: #fef3c7;
+  border-radius: 10px;
+  border-left: 5px solid #f59e0b;
+}
+
+.rating-display-box p {
+  margin: 5px 0;
+}
+
+.owner-box {
+  margin-top: 12px;
+  padding: 14px;
+  background: linear-gradient(135deg, #dcfce7, #d1fae5);
+  border-radius: 12px;
+}
+
+.delivery-man-box {
+  margin-top: 12px;
+  padding: 14px;
+  background: linear-gradient(135deg, #dcfce7, #d1fae5);
+  border-radius: 12px;
+}
+
+.product-info-box {
+  margin-top: 12px;
+  padding: 14px;
+  background: linear-gradient(135deg, #f8f1d4, #fde275);
+  border-radius: 12px;
 }
 
 @media (max-width: 900px) {
