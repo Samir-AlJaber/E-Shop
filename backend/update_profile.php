@@ -16,6 +16,17 @@ $role = trim($data["role"] ?? "");
 $reference_id = intval($data["reference_id"] ?? 0);
 $name = trim($data["name"] ?? "");
 $phone = trim($data["phone"] ?? "");
+if($phone !== ""){
+
+    if(!preg_match('/^[0-9]{11}$/',$phone)){
+        echo json_encode([
+            "success"=>false,
+            "message"=>"Phone number must be exactly 11 digits."
+        ]);
+        exit;
+    }
+}
+
 $address = trim($data["address"] ?? "");
 
 if ($reference_id <= 0 || $name === "" || $role === "") {
