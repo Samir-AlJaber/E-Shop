@@ -19,17 +19,14 @@ $role = trim($data["role"] ?? "");
 
 $errors = [];
 
-/* Validate role */
 if (!in_array($role, ['owner', 'salesman', 'customer'])) {
     $errors["role"] = "Invalid role selected";
 }
 
-/* Email validation */
 if (!str_ends_with($email, "@gmail.com")) {
     $errors["email"] = "Email must end with @gmail.com";
 }
 
-/* Password validation */
 if (strlen($password) < 8) {
     $errors["password"] = "Password must be at least 8 characters";
 }
@@ -44,7 +41,12 @@ elseif (!preg_match('/[0-9]/', $password)) {
 }
 
 if (!empty($errors)) {
-    echo json_encode(["success" => false, "errors" => $errors]);
+
+    echo json_encode([
+        "success" => false,
+        "message" => array_values($errors)[0]
+    ]);
+
     exit;
 }
 
@@ -64,15 +66,13 @@ if ($checkStmt === false) {
 if (sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC)) {
     echo json_encode([
         "success" => false,
-        "errors" => ["email" => "Email already registered"]
+        "message" => "Email already registered"
     ]);
     exit;
 }
 
-/* Hash password */
 $pass_hash = password_hash($password, PASSWORD_BCRYPT);
 
-/* Insert into role table */
 if ($role === "owner") {
     $sql = "INSERT INTO owner (username, email, password_hash)
             OUTPUT INSERTED.owner_id
@@ -100,7 +100,6 @@ if ($stmt === false) {
     exit;
 }
 
-/* Fetch inserted ID */
 $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
 if (!$row) {
@@ -113,7 +112,6 @@ if (!$row) {
 
 $reference_id = array_values($row)[0];
 
-/* Insert into user_account */
 $userSql = "INSERT INTO user_account (email, password_hash, role, reference_id)
             VALUES (?, ?, ?, ?)";
 

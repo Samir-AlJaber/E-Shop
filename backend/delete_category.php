@@ -31,7 +31,7 @@ if ($category_id <= 0) {
     exit;
 }
 
-$checkSql = "SELECT COUNT(*) AS total FROM product WHERE category_id = ?";
+$checkSql = "SELECT COUNT(*) AS total FROM product WHERE category_id = ? AND is_deleted = 0";
 $checkStmt = sqlsrv_query($conn, $checkSql, [$category_id]);
 
 if ($checkStmt === false) {
@@ -49,11 +49,20 @@ if ($row["total"] > 0) {
     exit;
 }
 
-$deleteSql = "DELETE FROM category WHERE category_id = ?";
+$deleteSql = "UPDATE category 
+              SET is_deleted = 1 
+              WHERE category_id = ?";
+              
 $deleteStmt = sqlsrv_query($conn, $deleteSql, [$category_id]);
 
 if ($deleteStmt === false) {
-    echo json_encode(["success" => false]);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Delete query failed",
+        "sql_error" => sqlsrv_errors()
+    ]);
+
     exit;
 }
 

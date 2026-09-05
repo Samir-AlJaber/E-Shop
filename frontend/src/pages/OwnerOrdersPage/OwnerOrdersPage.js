@@ -75,6 +75,12 @@ function OwnerOrdersPage() {
 
     let results = [];
 
+    if (searchType === "product") {
+      results = orders
+        .filter((o) => (o.product_name || "").toLowerCase().startsWith(text))
+        .map((o) => o.product_name);
+    }
+
     if (searchType === "customer") {
       results = orders
         .filter((o) => (o.customer_name || "").toLowerCase().startsWith(text))
@@ -103,7 +109,6 @@ function OwnerOrdersPage() {
 
     const unique = [...new Set(results)].filter(Boolean).slice(0, 5);
     setSuggestions(unique);
-    setShowSuggestions(unique.length > 0);
   }, [searchInput, searchType, orders]);
 
   const selectSuggestion = (value) => {
@@ -129,8 +134,10 @@ function OwnerOrdersPage() {
       if (text !== "") {
         if (searchType === "all") {
           matchSearch = false;
+        }else if (searchType === "product") {
+          matchSearch = (order.product_name || "").toLowerCase().startsWith(text);
         } else if (searchType === "customer") {
-          matchSearch = (order.customer_name || "")
+            matchSearch = (order.customer_name || "")
             .toLowerCase()
             .startsWith(text);
         } else if (searchType === "city") {
@@ -192,6 +199,10 @@ function OwnerOrdersPage() {
     }
 
     if (searchTerm !== "") {
+      if (searchType === "product") {
+        return `No orders found by product name "${searchTerm}".`;
+      }
+
       if (searchType === "customer") {
         return `No orders found for customer "${searchTerm}".`;
       }
@@ -318,6 +329,7 @@ function OwnerOrdersPage() {
                   }}
                 >
                   <option value="all">All</option>
+                  <option value="product">Product</option>
                   <option value="customer">Customer</option>
                   <option value="city">City</option>
                   <option value="payment">Payment</option>

@@ -10,7 +10,11 @@ if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
 
 include "db.php";
 
-$sql = "SELECT category_id, category_name FROM category ORDER BY category_name ASC";
+$sql = "SELECT category_id, category_name 
+        FROM category 
+        WHERE is_deleted = 0
+        ORDER BY category_name ASC";
+        
 $stmt = sqlsrv_query($conn, $sql);
 
 if ($stmt === false) {

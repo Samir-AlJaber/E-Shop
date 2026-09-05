@@ -31,15 +31,49 @@ if ($category_name === "") {
     exit;
 }
 
-$checkSql = "SELECT category_id FROM category WHERE category_name = ?";
+$checkSql = "
+    SELECT category_id, is_deleted 
+    FROM category 
+    WHERE category_name = ?
+";
+
 $checkStmt = sqlsrv_query($conn, $checkSql, [$category_name]);
 
-if (sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC)) {
-    echo json_encode([
-        "success" => false,
-        "message" => "Category already exists"
-    ]);
-    exit;
+$existingCategory = sqlsrv_fetch_array($checkStmt, SQLSRV_FETCH_ASSOC);
+
+
+if ($existingCategory) {
+
+    if ($existingCategory["is_deleted"] == 1) {
+
+        $restoreSql = "
+            UPDATE category
+            SET is_deleted = 0
+            WHERE category_id = ?
+        ";
+
+        $restoreStmt = sqlsrv_query(
+            $conn,
+            $restoreSql,
+            [$existingCategory["category_id"]]
+        );
+
+        echo json_encode([
+            "success" => true,
+            "message" => "Category added successfully"
+        ]);
+
+        exit;
+
+    } else {
+
+        echo json_encode([
+            "success" => false,
+            "message" => "Category already exists"
+        ]);
+
+        exit;
+    }
 }
 
 $insertSql = "INSERT INTO category (category_name) VALUES (?)";

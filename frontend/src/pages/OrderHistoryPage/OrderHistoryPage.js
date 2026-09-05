@@ -53,49 +53,51 @@ function OrderHistoryPage() {
   };
 
   useEffect(() => {
-    const text = searchInput.toLowerCase().trim();
+  const text = searchInput.toLowerCase().trim();
 
-    setSearchTerm(text);
+  setSearchTerm(text);
 
-    if (text === "" || searchType === "all") {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
+  if (text === "" || searchType === "all") {
+    setSuggestions([]);
+    return;
+  }
 
-    let results = [];
+  let results = [];
 
-    if (searchType === "product") {
-      results = orders
-        .filter((o) => (o.product_name || "").toLowerCase().startsWith(text))
-        .map((o) => o.product_name);
-    }
+  if (searchType === "product") {
+    results = orders
+      .filter((o) => (o.product_name || "").toLowerCase().startsWith(text))
+      .map((o) => o.product_name);
+  }
 
-    if (searchType === "city") {
-      results = orders
-        .filter((o) => (o.city || "").toLowerCase().startsWith(text))
-        .map((o) => o.city);
-    }
+  if (searchType === "city") {
+    results = orders
+      .filter((o) => (o.city || "").toLowerCase().startsWith(text))
+      .map((o) => o.city);
+  }
 
-    if (searchType === "payment") {
-      results = orders
-        .filter((o) => (o.payment_method || "").toLowerCase().startsWith(text))
-        .map((o) => o.payment_method);
-    }
+  if (searchType === "payment") {
+    results = orders
+      .filter((o) => (o.payment_method || "").toLowerCase().startsWith(text))
+      .map((o) => o.payment_method);
+  }
 
-    if (searchType === "status") {
-      results = orders
-        .filter((o) =>
-          (o.status || "").replace(/_/g, " ").toLowerCase().startsWith(text)
-        )
-        .map((o) => (o.status || "").replace(/_/g, " "));
-    }
+  if (searchType === "status") {
+    results = orders
+      .filter((o) =>
+        (o.status || "")
+          .replace(/_/g, " ")
+          .toLowerCase()
+          .startsWith(text)
+      )
+      .map((o) => (o.status || "").replace(/_/g, " "));
+  }
 
-    const unique = [...new Set(results)].filter(Boolean).slice(0, 5);
+  const unique = [...new Set(results)].filter(Boolean).slice(0, 5);
 
-    setSuggestions(unique);
-    setShowSuggestions(unique.length > 0);
-  }, [searchInput, searchType, orders]);
+  setSuggestions(unique);
+
+}, [searchInput, searchType, orders]);
 
   const selectSuggestion = (value) => {
     setSearchInput(value);

@@ -105,7 +105,6 @@ function SalesmanOrdersPage() {
     const unique = [...new Set(results)].filter(Boolean).slice(0, 5);
 
     setSuggestions(unique);
-    setShowSuggestions(unique.length > 0);
   }, [searchInput, searchType, orders]);
 
   const selectSuggestion = (value) => {
